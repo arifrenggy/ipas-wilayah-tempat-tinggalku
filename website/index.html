@@ -163,6 +163,38 @@
     margin-bottom:14px; flex-wrap:wrap}
   .hud .chip{font-size:14px}
 
+  /* ---------- RUANG KREASI ---------- */
+  .palette{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px}
+  .pitem{
+    font-family:inherit; font-size:16px; font-weight:700; color:var(--navy); background:#fff;
+    border:3px solid var(--line); border-radius:14px; padding:10px 14px; cursor:pointer;
+    display:flex; align-items:center; gap:8px; min-height:52px;
+  }
+  .pitem .ico{font-size:22px; line-height:1}
+  .pitem:hover{border-color:var(--sky)}
+  .pitem.sel{border-color:var(--orange); background:#FFF3E2}
+  .grid-peta{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+    background:#F4EFE1; border:4px dashed var(--line); border-radius:var(--radius); padding:12px;
+  }
+  .cell{
+    aspect-ratio:1/1; border-radius:12px; background:#fff; border:2px solid #E8E0CC;
+    display:grid; place-items:center; font-size:clamp(20px,4vw,30px); cursor:pointer;
+    user-select:none; transition:transform .1s ease, border-color .1s ease;
+  }
+  .cell:hover{border-color:var(--teal); transform:scale(1.04)}
+  .cell.isi{background:#FFFBF0; border-color:var(--green)}
+  .checklist{display:grid; gap:8px; margin-top:14px}
+  .ck{display:flex; align-items:center; gap:10px; font-size:15px; font-weight:700; color:var(--muted)}
+  .ck .box{width:24px; height:24px; border-radius:7px; border:3px solid var(--line);
+    display:grid; place-items:center; font-size:14px; color:#fff; flex:0 0 24px}
+  .ck.ok{color:#227A45}
+  .ck.ok .box{background:var(--green); border-color:var(--green)}
+  .skala-box{display:grid; gap:14px}
+  input[type=range]{width:100%; accent-color:var(--teal); height:34px}
+  .jarak{font-size:clamp(30px,6vw,44px); font-weight:700; color:var(--teal);
+    font-family:"Comic Sans MS",sans-serif; line-height:1}
+
   footer{background:var(--navy); color:#DBE7F1; padding:34px 0 40px; margin-top:40px}
   footer .wrap{display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:center}
   footer strong{color:#fff}
@@ -194,6 +226,7 @@
       <a href="#materi">Materi</a>
       <a href="#kuis">Kuis</a>
       <a href="#game">Game</a>
+      <a href="#kreasi">Kreasi</a>
       <a class="cta" href="#kuis">Mulai kuis</a>
     </nav>
   </div>
@@ -447,6 +480,49 @@
               <div class="stars" id="g2Stars"></div>
               <button class="btn ghost" id="g2Reset" type="button">Ulangi game</button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="materi" id="kreasi">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="num" style="background:var(--sky)">✏️</div>
+        <div><p>Coba sendiri</p><h2>Ruang kreasi: peta sekolahku</h2></div>
+      </div>
+      <p style="max-width:46rem; margin-bottom:20px">Klik satu benda di daftar, lalu klik kotak di peta untuk menaruhnya. Lengkapi sampai ada judul, mata angin, dan legenda!</p>
+
+      <div class="dua">
+        <div class="panel">
+          <div class="palette" id="palette"></div>
+          <div class="grid-peta" id="petaKreasi" aria-label="Peta kosong untuk diisi"></div>
+          <div class="row">
+            <button class="btn ghost" id="hapusPeta" type="button">🧹 Hapus semua</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 style="margin-top:0; font-size:22px; color:var(--navy)">Cek petamu</h3>
+          <div class="checklist" id="checks">
+            <div class="ck" data-ck="benda"><span class="box">✓</span><span>Ada 3 benda di peta (kelas, kantin, pohon, dll)</span></div>
+            <div class="ck" data-ck="judul"><span class="box">✓</span><span>Ada judul peta</span></div>
+            <div class="ck" data-ck="arah"><span class="box">✓</span><span>Ada mata angin</span></div>
+            <div class="ck" data-ck="legenda"><span class="box">✓</span><span>Ada legenda</span></div>
+          </div>
+          <div class="fb" id="kreasiFb" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:26px">
+        <h3 style="margin-top:0; font-size:24px; color:var(--navy)">Hitung jarak dengan skala</h3>
+        <p style="margin-top:0; color:var(--muted)">Skala peta ini: <b>1 cm = 1 km</b>. Geser garis di bawah, lihat jarak sebenarnya.</p>
+        <div class="skala-box">
+          <label for="sRange" style="font-weight:700">Jarak di peta: <span id="sVal">2</span> cm</label>
+          <input type="range" id="sRange" min="1" max="12" step="0.5" value="2" aria-describedby="sOut">
+          <div>
+            <div class="jarak"><span id="sOut">2</span> km</div>
+            <p style="margin:6px 0 0; color:var(--muted)" id="sNote">Kalau di peta 2 cm, jarak sebenarnya 2 km.</p>
           </div>
         </div>
       </div>
@@ -795,9 +871,139 @@
   document.getElementById("g1Reset").addEventListener("click", g1Init);
   document.getElementById("g2Reset").addEventListener("click", g2Init);
 
+  /* ---------------- RUANG KREASI ---------------- */
+  var ITEMS = [
+    { k: 'kelas', ico: '🏫', nama: 'Kelas', jenis: 'benda' },
+    { k: 'kantin', ico: '🍜', nama: 'Kantin', jenis: 'benda' },
+    { k: 'pohon', ico: '🌳', nama: 'Pohon', jenis: 'benda' },
+    { k: 'jalan', ico: '🚶', nama: 'Jalan', jenis: 'benda' },
+    { k: 'lapangan', ico: '⚽', nama: 'Lapangan', jenis: 'benda' },
+    { k: 'judul', ico: '📌', nama: 'Judul peta', jenis: 'judul' },
+    { k: 'arah', ico: '🧭', nama: 'Mata angin', jenis: 'arah' },
+    { k: 'legenda', ico: '🔑', nama: 'Legenda', jenis: 'legenda' }
+  ];
+  var CELLS = 12;
+  var palette = document.getElementById('palette');
+  var peta = document.getElementById('petaKreasi');
+  var kreasiFb = document.getElementById('kreasiFb');
+  var selItem = null;
+  var isiPeta = new Array(CELLS).fill(null);
+
+  function kreasiInit() {
+    selItem = null;
+    isiPeta = new Array(CELLS).fill(null);
+    palette.innerHTML = '';
+    ITEMS.forEach(function (it) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pitem';
+      b.setAttribute('data-k', it.k);
+      b.innerHTML = '<span class="ico">' + it.ico + '</span><span>' + it.nama + '</span>';
+      b.addEventListener('click', function () {
+        var semua = palette.querySelectorAll('.pitem');
+        for (var i = 0; i < semua.length; i++) { semua[i].classList.remove('sel'); }
+        b.classList.add('sel');
+        selItem = it.k;
+        kreasiFb.className = 'fb';
+        kreasiFb.textContent = 'Sekarang klik satu kotak di peta.';
+      });
+      palette.appendChild(b);
+    });
+    peta.innerHTML = '';
+    for (var i = 0; i < CELLS; i++) {
+      var c = document.createElement('div');
+      c.className = 'cell';
+      c.setAttribute('data-i', i);
+      c.setAttribute('role', 'button');
+      c.setAttribute('tabindex', '0');
+      c.addEventListener('click', function () { kreasiTaruh(this); });
+      c.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); kreasiTaruh(this); }
+      });
+      peta.appendChild(c);
+    }
+    kreasiCek();
+    kreasiFb.textContent = '';
+    kreasiFb.className = 'fb';
+  }
+
+  function cariItem(k) {
+    for (var i = 0; i < ITEMS.length; i++) { if (ITEMS[i].k === k) { return ITEMS[i]; } }
+    return null;
+  }
+
+  function kreasiTaruh(cell) {
+    if (!selItem) {
+      kreasiFb.className = 'fb no';
+      kreasiFb.textContent = 'Pilih dulu bendanya di daftar atas ya.';
+      return;
+    }
+    var idx = parseInt(cell.getAttribute('data-i'), 10);
+    if (isiPeta[idx]) {
+      kreasiFb.className = 'fb no';
+      kreasiFb.textContent = 'Kotak ini sudah terisi. Klik kotak lain atau hapus dulu.';
+      return;
+    }
+    var it = cariItem(selItem);
+    isiPeta[idx] = selItem;
+    cell.textContent = it.ico;
+    cell.classList.add('isi');
+    cell.setAttribute('title', it.nama);
+    kreasiFb.className = 'fb ok';
+    kreasiFb.textContent = it.nama + ' masuk ke peta. Bagus!';
+    kreasiCek();
+  }
+
+  function kreasiCek() {
+    var ada = { benda: 0, judul: 0, arah: 0, legenda: 0 };
+    for (var i = 0; i < isiPeta.length; i++) {
+      var k = isiPeta[i];
+      if (!k) { continue; }
+      var it = cariItem(k);
+      if (it) { ada[it.jenis] = ada[it.jenis] + 1; }
+    }
+    var lolos = {
+      benda: ada.benda >= 3,
+      judul: ada.judul >= 1,
+      arah: ada.arah >= 1,
+      legenda: ada.legenda >= 1
+    };
+    var rows = document.querySelectorAll('#checks .ck');
+    var semuaOk = true;
+    for (var j = 0; j < rows.length; j++) {
+      var key = rows[j].getAttribute('data-ck');
+      if (lolos[key]) { rows[j].classList.add('ok'); } else { rows[j].classList.remove('ok'); semuaOk = false; }
+    }
+    if (semuaOk) {
+      kreasiFb.className = 'fb ok';
+      kreasiFb.textContent = '🎉 Petamu lengkap! Judul, mata angin, dan legenda sudah ada.';
+    }
+    return semuaOk;
+  }
+
+  document.getElementById('hapusPeta').addEventListener('click', kreasiInit);
+
+  /* ---------------- KALKULATOR SKALA ---------------- */
+  var sRange = document.getElementById('sRange');
+  var sVal = document.getElementById('sVal');
+  var sOut = document.getElementById('sOut');
+  var sNote = document.getElementById('sNote');
+
+  function skalaUpdate() {
+    var cm = parseFloat(sRange.value);
+    var km = cm;
+    sVal.textContent = String(cm).replace('.', ',');
+    sOut.textContent = String(km).replace('.', ',');
+    sNote.textContent = 'Kalau di peta ' + String(cm).replace('.', ',') + ' cm, jarak sebenarnya ' +
+      String(km).replace('.', ',') + ' km.';
+  }
+  sRange.addEventListener('input', skalaUpdate);
+  skalaUpdate();
+
   renderQ();
   g1Init();
   g2Init();
+  kreasiInit();
 })();
 </script>
 </body>

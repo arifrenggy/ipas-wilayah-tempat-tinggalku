@@ -1,0 +1,16 @@
+{
+  "name": "ipas-wilayah-tempat-tinggalku",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build --base ./",
+    "build:single": "node scripts/patch-slidev.mjs && slidev build --base ./",
+    "export": "slidev export"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^53.1.0",
+    "@slidev/theme-default": "^0.25.0",
+    "vite-plugin-singlefile": "^2.3.4"
+  }
+}
