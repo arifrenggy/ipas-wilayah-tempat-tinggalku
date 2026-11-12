@@ -4,7 +4,7 @@ Materi IPAS kelas 4, Bab 3 (buku IPAS hlm. 65-78), untuk mengajar di SD Taimanu.
 
 - `index.html` - halaman pembuka berisi tautan ke semua bahan
 - `presentasi/` - presentasi animasi 16 slide, dibangun dengan [Slidev](https://sli.dev)
-- `website/` - website pembelajaran (materi, kuis 10 soal, 2 game)
+- `website/` - arena game pendukung (kuis, 2 game, ruang kreasi, alat bantu skala)
 - `unduhan/` - versi file PPT dan website yang bisa diunduh
 
 ## Isi presentasi
@@ -13,9 +13,16 @@ skala, tiga bentuk peta, komponen peta, simbol dan legenda, inset, mata angin,
 game cepat, kegiatan menggambar peta sekolah, ringkasan, dan penutup.
 
 ## Isi website
-Enam bagian materi, kuis 10 soal, dua game (Cocokkan Simbol Peta, Rakit Peta Ajaib),
-ruang kreasi merakit peta sekolah sendiri, dan kalkulator skala. Semua gambar tertanam
-di dalam satu file, jadi bisa dibuka tanpa internet.
+Website khusus kegiatan pendukung, tanpa bacaan materi (materi ada di presentasi):
+
+- Kuis Kilat, 10 soal
+- Game 1: Cocokkan Simbol Peta
+- Game 2: Rakit Peta Ajaib
+- Ruang kreasi: merakit peta sekolah sendiri
+- Alat bantu hitung jarak dengan skala
+
+Ukurannya kecil (sekitar 38 KB) karena tanpa gambar, jadi cepat dibuka di HP siswa
+dan tetap jalan tanpa internet.
 
 ## Membangun ulang presentasi
 Sumber Slidev ada di folder `deck/`.
